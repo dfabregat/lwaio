@@ -1,0 +1,114 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\addtolength{\textwidth}{2.2cm}  
+\addtolength{\oddsidemargin}{-1.10cm}
+\addtolength{\evensidemargin}{-1.10cm}
+\addtolength{\textheight}{2.0cm} 
+\addtolength{\topmargin}{-1.2cm}
+
+\usepackage{colortbl}
+
+\usepackage{fancybox}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes,snakes,arrows,shadows}
+
+\newcommand{\lwaio}[0]{{\tt lwaio}}
+
+\begin{document}
+
+\title{lwaio: a light-weight asynchronous input/output library}
+
+\author{Diego Fabregat-Traver}
+
+\date{December, 2014}
+
+\maketitle
+
+\begin{abstract}
+The \lwaio{} library is a light-weight library for asynchronous input/output (I/O).
+\lwaio{} replicates the basic functionality of the POSIX {\tt aio} library with
+the following additional features: it only spawns one thread to perform the I/O
+operations, and this thread may be pinned to a specific core. The main reason
+why I developed this library is to overcome the performance penalty observed when
+using the original {\tt aio} library to overlap I/O operations
+with the execution of highly optimized BLAS~\cite{BLAS3} routines.
+This problem was experienced while developing the code presented in~\cite{OmicABEL-SingleTrait,OmicABEL-noMM}.
+In the specific case of~\cite{OmicABEL-noMM}, the use of the {\tt aio} library limited scalability of the
+code on a 40-core node to about 20x, while with our library we attained more than 36x.
+\end{abstract}
+
+\vspace{5mm}
+
+{\Large \bf This document is under construction. If you have any comment or question, feel
+free to contact me at
+\begin{center} 
+    {\tt fabregat@aices.rwth-aachen.de}
+\end{center}}
+
+\vspace{5mm}
+
+\section{Overview}
+
+%user space
+
+\section{Interface}
+
+\begin{verbatim}
+typedef struct lwaio_task
+{
+    FILE   *fp;
+    off_t  offset;
+    size_t nbytes;
+    void   *buffer;
+} lwaio_task;
+\end{verbatim}
+
+\begin{verbatim}
+void lwaio_init( void );
+void lwaio_finalize( void );
+
+void lwaio_read(  lwaio_task *task );
+void lwaio_write( lwaio_task *task );
+void lwaio_wait(  lwaio_task *task );
+
+LWAIO_PIN_TO="0"
+\end{verbatim}
+
+\section{Internals}
+
+%Single pthread + one task queue (double-linked list) + read/write
+
+%I/O operations are processed in the order they have been enqueued
+
+\section{Example of use: double buffering}
+
+%\bibliography{bibliography}
+%\bibliographystyle{plain}
+\begin{thebibliography}{1}
+
+\bibitem{BLAS3}
+Jack Dongarra, Jeremy~Du Croz, Sven Hammarling, and Iain~S. Duff.
+\newblock A set of level 3 basic linear algebra subprograms.
+\newblock {\em ACM Trans. Math. Software}, 16(1):1--28, 1990.
+
+\bibitem{OmicABEL-SingleTrait}
+Diego Fabregat-Traver, Yurii~S. Aulchenko, and Paolo Bientinesi.
+\newblock Solving sequences of generalized least-squares problems on
+  multi-threaded architectures.
+\newblock {\em Applied Mathematics and Computation (AMC)}, 234:606--617, May
+  2014.
+
+\bibitem{OmicABEL-noMM}
+Alvaro Frank, Diego Fabregat-Traver, and Paolo Bientinesi.
+\newblock Large-scale linear regression: Development of high-performance
+  routines.
+\newblock {\em Applied Mathematics and Computation}, 275:411--421, February
+  2016.
+
+\end{thebibliography}
+
+\end{document}
