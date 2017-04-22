@@ -35,7 +35,7 @@ the following additional features: it only spawns one thread to perform the I/O
 operations, and this thread may be pinned to a specific core. The main reason
 why I developed this library is to overcome the performance penalty observed when
 using the original {\tt aio} library to overlap I/O operations
-with the execution of highly optimized BLAS~\cite{BLAS3} routines.
+with the execution of highly optimized BLAS 3~\cite{BLAS3} routines.
 This problem was experienced while developing the code presented in~\cite{OmicABEL-SingleTrait,OmicABEL-noMM}.
 In the specific case of~\cite{OmicABEL-noMM}, the use of the {\tt aio} library limited scalability of the
 code on a 40-core node to about 20x, while with our library we attained more than 36x.
@@ -43,11 +43,8 @@ code on a 40-core node to about 20x, while with our library we attained more tha
 
 \vspace{5mm}
 
-{\Large \bf This document is under construction. If you have any comment or question, feel
-free to contact me at
-\begin{center} 
-    {\tt fabregat@aices.rwth-aachen.de}
-\end{center}}
+{\large \bf This document is under construction. If you have any comment or question, feel
+free to contact me at {\tt fabregat@aices.rwth-aachen.de}.}
 
 \vspace{5mm}
 
